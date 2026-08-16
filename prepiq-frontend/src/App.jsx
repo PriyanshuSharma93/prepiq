@@ -1,13 +1,15 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import apiClient from './api/client';
 
-function App() {
+function Home() {
   const [status, setStatus] = useState('Checking backend...');
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/health')
-      .then((response) => response.json())
-      .then((data) => setStatus(`Backend says: ${data.status}`))
-      .catch((error) => setStatus('Backend not reachable'));
+    apiClient
+      .get('/health')
+      .then((response) => setStatus(`Backend says: ${response.data.status}`))
+      .catch(() => setStatus('Backend not reachable'));
   }, []);
 
   return (
@@ -15,6 +17,17 @@ function App() {
       <h1>PrepIQ</h1>
       <p>{status}</p>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        {/* Day 4 onward: /login, /signup, /dashboard, etc. will be added here */}
+      </Routes>
+    </BrowserRouter>
   );
 }
 
