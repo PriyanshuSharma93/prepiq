@@ -1,18 +1,47 @@
 # PrepIQ — Project Structure (PROJECT-STRUCTURE.md)
 
-**Version:** 1.0 (Day 2)
+**Version:** 1.1 (Updated Day 3 — reflects actual scaffolded project, not just plan)
+
+**Day 3 update note:** The structure below was designed on Day 2 and has now been scaffolded for real. Two small additions beyond the original plan: `application.properties.example` (safe template, committed) alongside the real `application.properties` (git-ignored), and `config/SecurityConfig.java` (temporary permissive security config, to be replaced with real JWT rules on Day 4).
 
 ---
 
 ## 1. Repository Layout (Monorepo)
 
+prepiq/
+├── prepiq-backend/ # Spring Boot application
+├── prepiq-frontend/ # React application
+├── docs/ # Planning & design documentation (this doc's home)
+│ ├── PRD.md
+│ ├── PITCH-DECK.pptx
+│ ├── IMPLEMENTATION-BLUEPRINT.md
+│ ├── ARCHITECTURE.md
+│ ├── SCHEMA.md
+│ ├── API.md
+│ ├── UI-WIREFRAMES.md
+│ ├── PROJECT-STRUCTURE.md
+│ ├── SETUP.md
+│ ├── ENVIRONMENT.md
+│ └── DAY3-SUMMARY.md
+├── PROJECT-LOG.md # Running daily log (created today, updated every day)
+├── .gitignore
+├── README.md
+└── LICENSE
+
+
+**Why a monorepo:** Both frontend and backend are small, tightly coupled, and built by one person on a 10-day timeline. Separate repos would add Git-management overhead with zero benefit at this scale. `docs/` keeps every planning artifact next to the code it describes — anyone (including a fresh AI session) can find full context in one place.
+
+---
+
+## 2. Backend Structure (`prepiq-backend/`)
+
 prepiq-backend/
 ├── src/main/java/com/prepiq/backend/
 │ ├── PrepiqApplication.java
 │ ├── config/
-│ │ └── SecurityConfig.java
+│ │ └── SecurityConfig.java # ✅ Day 3: temporary permit-all config; becomes real JWT rules Day 4
 │ ├── controller/
-│ │ ├── HealthController.java
+│ │ ├── HealthController.java # ✅ Built Day 3
 │ │ ├── AuthController.java
 │ │ ├── ProblemController.java
 │ │ ├── DashboardController.java
@@ -44,7 +73,8 @@ prepiq-backend/
 │ └── exception/
 │ └── GlobalExceptionHandler.java
 ├── src/main/resources/
-│ ├── application.properties # local dev config
+│ ├── application.properties # ✅ Day 3: local dev config — git-ignored, contains real secrets
+│ ├── application.properties.example # ✅ Day 3: safe template, committed to repo
 │ └── application-prod.properties # production config (env-var based, Day 9)
 ├── src/test/java/... # (if time permits; not blocking v1.0)
 ├── pom.xml
@@ -70,7 +100,7 @@ This structure maps 1:1 to the API.md endpoint groups and SCHEMA.md tables — a
 prepiq-frontend/
 ├── src/
 │ ├── main.jsx
-│ ├── App.jsx # Routes definition
+│ ├── App.jsx # ✅ Day 3: BrowserRouter + Routes scaffolded, Home component calling /api/health
 │ ├── pages/
 │ │ ├── Login.jsx
 │ │ ├── Signup.jsx
@@ -84,7 +114,7 @@ prepiq-frontend/
 │ │ ├── TopicCard.jsx
 │ │ └── LoadingSpinner.jsx
 │ ├── api/
-│ │ ├── client.js # Axios instance, base URL, JWT header injection
+│ │ ├── client.js # ✅ Built Day 3: Axios instance, base URL, JWT header injection (ready, unused until Day 4)
 │ │ ├── authApi.js
 │ │ ├── problemsApi.js
 │ │ ├── dashboardApi.js
@@ -112,14 +142,16 @@ prepiq-frontend/
 
 | Day | Primary Folders Touched |
 |---|---|
-| Day 3 | `backend/model/`, `backend/repository/` |
-| Day 4 | `backend/security/`, `backend/controller/AuthController.java`, `frontend/pages/Login.jsx`, `Signup.jsx` |
-| Day 5 | `backend/controller/ProblemController.java`, `backend/service/ProblemService.java`, `frontend/pages/LogProblem.jsx`, `ProblemList.jsx` |
-| Day 6 | `backend/service/DashboardService.java`, `frontend/pages/Dashboard.jsx` |
-| Day 7 | `backend/service/GeminiClient.java`, `InterviewService.java`, `frontend/pages/MockInterview.jsx` |
-| Day 8 | `backend/exception/`, `frontend/components/Navbar.jsx`, `InterviewHistory.jsx`, styling across all pages |
-| Day 9 | `application-prod.properties`, `.env.production`, deployment configs |
+| Day 3 ✅ | Project scaffolding, `HealthController`, `SecurityConfig`, `App.jsx`, `api/client.js` |
+| Day 4 | `backend/model/`, `backend/repository/` |
+| Day 5 | `backend/security/`, `backend/controller/AuthController.java`, `frontend/pages/Login.jsx`, `Signup.jsx` |
+| Day 6 | `backend/controller/ProblemController.java`, `backend/service/ProblemService.java`, `frontend/pages/LogProblem.jsx`, `ProblemList.jsx` |
+| Day 7 | `backend/service/DashboardService.java`, `frontend/pages/Dashboard.jsx` |
+| Day 8 | `backend/service/GeminiClient.java`, `InterviewService.java`, `frontend/pages/MockInterview.jsx` |
+| Day 9 | `backend/exception/`, `frontend/components/Navbar.jsx`, `InterviewHistory.jsx`, styling, deployment configs |
 | Day 10 | `README.md`, final QA — no new folders |
+
+*(Note: this table uses actual chat day numbers, already adjusted for the Day 2 System Design shift — see IMPLEMENTATION-BLUEPRINT.md's day-numbering note for full explanation.)*
 
 ---
 

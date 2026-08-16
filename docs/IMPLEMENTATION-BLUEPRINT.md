@@ -5,17 +5,15 @@
 **Founder time budget:** ~3–4 hours/day
 **Stack:** Spring Boot (backend) · React (frontend) · PostgreSQL (finalized Day 2) · Gemini API `gemini-flash-latest` (AI) · Render (backend+DB) · Netlify (frontend)
 **Day 2 update:** Full technical design completed — see `docs/ARCHITECTURE.md`, `docs/SCHEMA.md`, `docs/API.md`, `docs/UI-WIREFRAMES.md`, `docs/PROJECT-STRUCTURE.md` in the repo. These contain full implementation-level detail (exact entity fields, exact endpoint contracts, exact folder paths) that supersede the summaries below wherever more detail is needed.
+**Day-numbering note (added Day 3):** Chat Day 2 was spent entirely on System Design (architecture/schema/API docs), not hands-on project setup. Chat Day 3 covered what this document's "DAY 2 — Project Setup" section describes. As a result, **this document's internal day-labels now run one day behind the actual chat/calendar days**: this doc's "DAY 2" section = chat Day 3, this doc's "DAY 3" section = chat Day 4, and so on through "DAY 9" = chat Day 10. No scope was lost — every day's content still applies, just shifted by one. Future sessions should paste the section matching (chat day − 1).
 **Rule for every future daily AI conversation:** Paste this document + the previous day's "Handoff Notes" at the start of the session, and reference the `docs/` folder for full technical specs. No re-architecting — follow the plan.
 
 ---
 
 ## Global Architecture (locked for the whole build)
-
 [React Frontend] --REST/JSON--> [Spring Boot Backend] --JDBC--> [PostgreSQL/MySQL]
 |
 --HTTPS--> [Gemini API]
-
-
 **Core entities (DB schema, finalized Day 3):**
 - `User` (id, name, email, password_hash, created_at)
 - `Problem` (id, user_id FK, name, topic, difficulty, status, mistake_note, solved_date)
@@ -32,6 +30,7 @@
 ---
 
 ## DAY 2 — Project Setup & Tech Stack Finalization
+*(= Chat Day 3 — see day-numbering note above. This day is now ✅ COMPLETE as of chat Day 3.)*
 
 ### 🎯 Objective
 Finalize exact tech stack versions, initialize both backend and frontend project skeletons, connect to a local/dev database, and get "Hello World" working end-to-end (frontend calls backend, backend returns JSON).
@@ -56,7 +55,6 @@ Spring Boot project bootstrapping with Spring Initializr, connecting Spring Boot
 10. Initialize Git repo, first commit, push to GitHub (private or public — your choice).
 
 ### 📂 Files/Folders
-
 prepiq-backend/
 src/main/java/.../PrepiqApplication.java
 src/main/java/.../controller/HealthController.java
@@ -65,8 +63,6 @@ prepiq-frontend/
 src/App.js
 src/api/client.js
 .gitignore (must exclude application.properties secrets / .env)
-
-
 ### 🔗 Integrations
 - PostgreSQL/MySQL (local instance)
 - Gemini API key obtained (not yet used in code)
@@ -82,11 +78,11 @@ src/api/client.js
 - Lombok not generating getters/setters → ensure annotation processing enabled in IDE
 
 ### ✅ End-of-Day Checklist
-- [ ] Backend runs locally without errors
-- [ ] Frontend runs locally without errors
-- [ ] Frontend successfully displays backend's health check response
-- [ ] Gemini API key obtained and saved securely (not committed)
-- [ ] GitHub repo created with first commit
+- [x] Backend runs locally without errors
+- [x] Frontend runs locally without errors
+- [x] Frontend successfully displays backend's health check response
+- [x] Gemini API key obtained and saved securely (not committed)
+- [x] GitHub repo created with first commit
 
 ### 📸 Expected State / Screenshots
 - Screenshot of backend terminal showing "Started PrepiqApplication"
@@ -99,6 +95,7 @@ Backend and frontend skeletons are running and connected. DB engine choice is lo
 ---
 
 ## DAY 3 — Database Schema & JPA Entities
+*(= Chat Day 4 — see day-numbering note above. This is TOMORROW's work.)*
 
 ### 🎯 Objective
 Implement the full database schema as JPA entities/repositories, verify tables are created correctly, and confirm CRUD works via a temporary test endpoint or Postman.
@@ -122,7 +119,6 @@ JPA entity relationships (`@OneToMany`/`@ManyToOne`), Spring Data JPA repositori
 8. Write one temporary test: insert a dummy user via a repository call in a `CommandLineRunner`, confirm it persists, then remove the test code.
 
 ### 📂 Files/Folders
-
 src/main/java/.../model/User.java
 src/main/java/.../model/Problem.java
 src/main/java/.../model/MockInterviewSession.java
@@ -131,7 +127,6 @@ src/main/java/.../repository/UserRepository.java
 src/main/java/.../repository/ProblemRepository.java
 src/main/java/.../repository/MockInterviewSessionRepository.java
 src/main/java/.../repository/MockInterviewQuestionRepository.java
-
 
 ### 🔗 Integrations
 None new — pure backend/DB work.
@@ -160,6 +155,7 @@ Schema is live. Next: build JWT authentication (signup/login) and secure the API
 ---
 
 ## DAY 4 — Authentication (JWT Signup/Login)
+*(= Chat Day 5)*
 
 ### 🎯 Objective
 Implement secure signup/login with JWT, protect all future API endpoints behind authentication.
@@ -184,7 +180,6 @@ Spring Security configuration, JWT generation/validation, password hashing with 
 8. On frontend: build simple Signup and Login pages/forms, store JWT in memory/localStorage, attach token to subsequent API calls via an axios/fetch wrapper.
 
 ### 📂 Files/Folders
-
 src/main/java/.../security/JwtUtil.java
 src/main/java/.../security/JwtAuthFilter.java
 src/main/java/.../security/SecurityConfig.java
@@ -194,8 +189,6 @@ src/main/java/.../dto/SignupRequest.java, LoginRequest.java, AuthResponse.java
 prepiq-frontend/src/pages/Signup.jsx
 prepiq-frontend/src/pages/Login.jsx
 prepiq-frontend/src/api/authApi.js
-
-
 ### 🔗 Integrations
 - Spring Security, JJWT (or similar JWT library)
 
@@ -227,6 +220,7 @@ Auth is fully working — every following endpoint must use the authenticated us
 ---
 
 ## DAY 5 — DSA Problem Logging (CRUD) + Frontend
+*(= Chat Day 6)*
 
 ### 🎯 Objective
 Build the complete problem-logging feature — backend CRUD API and a usable frontend form + list — fully connected to the authenticated user.
@@ -252,15 +246,12 @@ Building scoped REST CRUD APIs (data tied to logged-in user), React forms and st
 8. Manually log 8-10 realistic dummy problems across topics/statuses — this seed data is needed for Day 6's dashboard logic to be testable.
 
 ### 📂 Files/Folders
-
 src/main/java/.../controller/ProblemController.java
 src/main/java/.../service/ProblemService.java
 src/main/java/.../dto/ProblemDTO.java
 prepiq-frontend/src/pages/LogProblem.jsx
 prepiq-frontend/src/pages/ProblemList.jsx
 prepiq-frontend/src/api/problemsApi.js
-
-
 ### 🔗 Integrations
 None new.
 
@@ -287,6 +278,7 @@ Problem logging is fully functional with seed data in place. Next: build the wea
 ---
 
 ## DAY 6 — Weakness Detection Logic + Progress Dashboard
+*(= Chat Day 7)*
 
 ### 🎯 Objective
 Implement the rule-based weak-topic detection algorithm and build a dashboard UI that visualizes topic-wise performance.
@@ -311,14 +303,11 @@ Writing aggregation logic in Java (grouping/aggregating JPA query results), basi
 6. Add a "Weak Topics" summary section at the top (used later to drive the mock interview).
 
 ### 📂 Files/Folders
-
 src/main/java/.../service/DashboardService.java
 src/main/java/.../controller/DashboardController.java
 src/main/java/.../dto/TopicStatsDTO.java
 prepiq-frontend/src/pages/Dashboard.jsx
 prepiq-frontend/src/components/TopicCard.jsx
-
-
 ### 🔗 Integrations
 None new.
 
@@ -345,6 +334,7 @@ Weak-topic detection is working and testable. This is the critical input for the
 ---
 
 ## DAY 7 — Gemini API Integration + AI Mock Interview (Core Build)
+*(= Chat Day 8)*
 
 ### 🎯 Objective
 Integrate the Gemini API and build the dynamic mock interview flow: start session → get a weakness-targeted question → submit answer → get evaluation/follow-up.
@@ -361,23 +351,19 @@ Calling external AI APIs from Spring Boot (RestTemplate/WebClient), prompt engin
 1. Add Gemini API key to `application.properties` (via environment variable, not hardcoded). **Model finalized on Day 2:** use `gemini-flash-latest` as the primary model string (fallback: `gemini-flash-lite-latest` if rate-limited). Both are free-tier as of Aug 2026 — see ARCHITECTURE.md Section 1 for details.
 2. Create `GeminiClient` service using `WebClient` (or `RestTemplate`) to call the Gemini API endpoint.
 3. Design the core prompt template (lock this structure):
-
 You are a technical interviewer. The candidate is weak in: {weakTopics}.
 Ask ONE technical DSA question focused on one of these weak topics.
 Keep it concise. Return ONLY the question text.
-
 4. Implement `POST /api/interview/start`:
    - Fetch user's weak topics (reuse Day 6 service)
    - Call Gemini with the prompt above
    - Create `MockInterviewSession` + first `MockInterviewQuestion` record
    - Return session ID + first question to frontend
 5. Design the evaluation prompt template:
-
 Question: {questionText}
 Candidate's answer: {userAnswer}
 Evaluate briefly (2-3 sentences) and decide: is a follow-up question needed, or should we move to a new weak topic?
 Return JSON: {"evaluation": "...", "nextQuestion": "..."}
-
 6. Implement `POST /api/interview/{sessionId}/answer`:
    - Save user's answer to current question
    - Call Gemini with evaluation prompt
@@ -390,15 +376,12 @@ Return JSON: {"evaluation": "...", "nextQuestion": "..."}
 9. Frontend: build `MockInterview.jsx` — start button, question display, answer textbox, submit, loop until session ends, then show final score/feedback.
 
 ### 📂 Files/Folders
-
 src/main/java/.../service/GeminiClient.java
 src/main/java/.../service/InterviewService.java
 src/main/java/.../controller/InterviewController.java
 src/main/java/.../dto/InterviewStartResponse.java, AnswerRequest.java, AnswerResponse.java
 prepiq-frontend/src/pages/MockInterview.jsx
 prepiq-frontend/src/api/interviewApi.js
-
-
 ### 🔗 Integrations
 - Google Gemini API (generateContent endpoint)
 
@@ -430,6 +413,7 @@ Core AI feature is complete and working — this is the heart of the product dem
 ---
 
 ## DAY 8 — UI Polish, Interview History, Error Handling
+*(= Chat Day 9)*
 
 ### 🎯 Objective
 Polish the overall UI/UX, add the interview history page, handle error/edge cases across the app, and prepare the app for deployment.
@@ -454,15 +438,12 @@ Production-readiness thinking — error boundaries, loading states, basic respon
 8. Fix any bugs found during this full run-through.
 
 ### 📂 Files/Folders
-
 src/main/java/.../exception/GlobalExceptionHandler.java
 src/main/java/.../controller/InterviewController.java (add history endpoint)
 prepiq-frontend/src/pages/InterviewHistory.jsx
 prepiq-frontend/src/components/Navbar.jsx
 prepiq-frontend/src/components/LoadingSpinner.jsx
 prepiq-frontend/src/styles/ (basic consistent CSS)
-
-
 ### 🔗 Integrations
 None new.
 
@@ -491,6 +472,7 @@ App is feature-complete and polished locally. Next: deploy backend to Render, fr
 ---
 
 ## DAY 9 — Deployment (Render + Netlify)
+*(= Chat Day 10 — final day)*
 
 ### 🎯 Objective
 Deploy the backend + database to Render and the frontend to Netlify, with all environment variables/secrets correctly configured, and verify the full app works in production.
@@ -514,13 +496,10 @@ No new features — deployment only.
 10. Fix any production-only issues (usually CORS, environment variables, or DB connection strings).
 
 ### 📂 Files/Folders
-
 src/main/resources/application-prod.properties (or env-var based config)
 prepiq-frontend/.env.production
 render.yaml (optional, if using Render blueprint)
 netlify.toml (optional, build config)
-
-
 ### 🔗 Integrations
 - Render (backend + DB hosting)
 - Netlify (frontend hosting)
@@ -554,6 +533,7 @@ App is fully deployed and functional in production. Next: final QA pass, README 
 ---
 
 ## DAY 10 — Final QA, Documentation & Launch
+*(= Chat Day 11 — if the 10-day calendar needs to extend by one day due to the Day 2 shift, this is that buffer day. Otherwise, compress with Day 9 if time allows.)*
 
 ### 🎯 Objective
 Do a final end-to-end QA pass, write a strong README, polish the GitHub repo, and publish/share the project — officially completing v1.0.
@@ -582,12 +562,9 @@ No new features — documentation, QA, and launch only.
 8. Do a final self-review against the PRD's Day 10 Definition of Done checklist.
 
 ### 📂 Files/Folders
-
 README.md
 LICENSE (optional)
 /docs/screenshots/ (for README + LinkedIn)
-
-
 ### 🔗 Integrations
 None new.
 
@@ -615,4 +592,4 @@ None new.
 v1.0 is shipped. Future sessions (maintenance phase) should reference the PRD's "Future Scope" section for v2.0 planning: LeetCode auto-sync, resume review, voice interviews, ML-based weakness detection, peer comparison.
 
 ---
-*This blueprint is the single source of truth for Days 2–10. Paste the relevant day's section into a fresh AI conversation to continue building without re-planning.*
+*This blueprint is the single source of truth for Days 2–10 (internally numbered; see day-numbering note at top for actual chat-day mapping). Paste the relevant section into a fresh AI conversation to continue building without re-planning.*
