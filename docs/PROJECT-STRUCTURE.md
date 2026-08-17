@@ -1,8 +1,13 @@
+Samajh gaya — sab ek hi jagah de deta hoon.
+
+docs/PROJECT-STRUCTURE.md (poora file replace karo)
 # PrepIQ — Project Structure (PROJECT-STRUCTURE.md)
 
-**Version:** 1.1 (Updated Day 3 — reflects actual scaffolded project, not just plan)
+**Version:** 1.2 (Updated Day 4 — entities and repositories built)
 
-**Day 3 update note:** The structure below was designed on Day 2 and has now been scaffolded for real. Two small additions beyond the original plan: `application.properties.example` (safe template, committed) alongside the real `application.properties` (git-ignored), and `config/SecurityConfig.java` (temporary permissive security config, to be replaced with real JWT rules on Day 4).
+**Day 3 update note:** The structure below was designed on Day 2 and has now been scaffolded for real. Two small additions beyond the original plan: `application.properties.example` (safe template, committed) alongside the real `application.properties` (git-ignored), and `config/SecurityConfig.java` (temporary permissive security config, to be replaced with real JWT rules on Day 5).
+
+**Day 4 update note:** All 4 JPA entities and their repositories are built and verified against the live database (tables created, foreign keys confirmed, insert/read tested).
 
 ---
 
@@ -39,7 +44,7 @@ prepiq-backend/
 ├── src/main/java/com/prepiq/backend/
 │ ├── PrepiqApplication.java
 │ ├── config/
-│ │ └── SecurityConfig.java # ✅ Day 3: temporary permit-all config; becomes real JWT rules Day 4
+│ │ └── SecurityConfig.java # ✅ Day 3: temporary permit-all config; becomes real JWT rules Day 5
 │ ├── controller/
 │ │ ├── HealthController.java # ✅ Built Day 3
 │ │ ├── AuthController.java
@@ -53,15 +58,15 @@ prepiq-backend/
 │ │ ├── InterviewService.java
 │ │ └── GeminiClient.java
 │ ├── repository/
-│ │ ├── UserRepository.java
-│ │ ├── ProblemRepository.java
-│ │ ├── MockInterviewSessionRepository.java
-│ │ └── MockInterviewQuestionRepository.java
+│ │ ├── UserRepository.java # ✅ Built Day 4
+│ │ ├── ProblemRepository.java # ✅ Built Day 4
+│ │ ├── MockInterviewSessionRepository.java # ✅ Built Day 4
+│ │ └── MockInterviewQuestionRepository.java # ✅ Built Day 4
 │ ├── model/
-│ │ ├── User.java
-│ │ ├── Problem.java
-│ │ ├── MockInterviewSession.java
-│ │ └── MockInterviewQuestion.java
+│ │ ├── User.java # ✅ Built Day 4
+│ │ ├── Problem.java # ✅ Built Day 4
+│ │ ├── MockInterviewSession.java # ✅ Built Day 4
+│ │ └── MockInterviewQuestion.java # ✅ Built Day 4
 │ ├── dto/
 │ │ ├── SignupRequest.java, LoginRequest.java, AuthResponse.java
 │ │ ├── ProblemDTO.java
@@ -85,7 +90,7 @@ prepiq-backend/
 - `controller/` — HTTP boundary only: receives requests, calls services, returns responses. No business logic here.
 - `service/` — All business logic: weak-topic rules, Gemini prompt construction, session flow control.
 - `repository/` — Spring Data JPA interfaces, pure data access.
-- `model/` — JPA entities, mirror SCHEMA.md exactly.
+- `model/` — JPA entities, mirror SCHEMA.md exactly. **Note (Day 4):** `topic`/`difficulty`/`status` fields are stored as `String` (VARCHAR), not Java `enum` types — a deliberate simplification since validation happens at the DTO layer (Day 5), avoiding unnecessary JPA enum-mapping complexity.
 - `dto/` — Request/response shapes, decoupled from entities (never expose `User.passwordHash` etc.).
 - `security/` — JWT generation/validation and the auth filter.
 - `config/` — Spring Security and CORS configuration.
@@ -114,7 +119,7 @@ prepiq-frontend/
 │ │ ├── TopicCard.jsx
 │ │ └── LoadingSpinner.jsx
 │ ├── api/
-│ │ ├── client.js # ✅ Built Day 3: Axios instance, base URL, JWT header injection (ready, unused until Day 4)
+│ │ ├── client.js # ✅ Built Day 3: Axios instance, base URL, JWT header injection (ready, unused until Day 5)
 │ │ ├── authApi.js
 │ │ ├── problemsApi.js
 │ │ ├── dashboardApi.js
@@ -143,15 +148,13 @@ prepiq-frontend/
 | Day | Primary Folders Touched |
 |---|---|
 | Day 3 ✅ | Project scaffolding, `HealthController`, `SecurityConfig`, `App.jsx`, `api/client.js` |
-| Day 4 | `backend/model/`, `backend/repository/` |
+| Day 4 ✅ | `backend/model/`, `backend/repository/` (all 4 entities + repositories) |
 | Day 5 | `backend/security/`, `backend/controller/AuthController.java`, `frontend/pages/Login.jsx`, `Signup.jsx` |
 | Day 6 | `backend/controller/ProblemController.java`, `backend/service/ProblemService.java`, `frontend/pages/LogProblem.jsx`, `ProblemList.jsx` |
 | Day 7 | `backend/service/DashboardService.java`, `frontend/pages/Dashboard.jsx` |
 | Day 8 | `backend/service/GeminiClient.java`, `InterviewService.java`, `frontend/pages/MockInterview.jsx` |
 | Day 9 | `backend/exception/`, `frontend/components/Navbar.jsx`, `InterviewHistory.jsx`, styling, deployment configs |
 | Day 10 | `README.md`, final QA — no new folders |
-
-*(Note: this table uses actual chat day numbers, already adjusted for the Day 2 System Design shift — see IMPLEMENTATION-BLUEPRINT.md's day-numbering note for full explanation.)*
 
 ---
 
