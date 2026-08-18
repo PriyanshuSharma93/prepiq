@@ -13,3 +13,7 @@ spring.jpa.show-sql=true
 # Gemini API
 gemini.api.key=YOUR_GEMINI_API_KEY_HERE
 gemini.api.model=gemini-flash-latest
+
+# JWT
+jwt.secret=YOUR_RANDOM_SECRET_KEY_HERE_AT_LEAST_32_CHARACTERS
+jwt.expiration-ms=86400000
