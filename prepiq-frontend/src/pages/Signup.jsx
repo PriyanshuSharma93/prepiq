@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { signup } from '../api/authApi';
 import { useAuth } from '../context/AuthContext';
+import Footer from '../components/Footer';
 
 function Signup() {
   const [name, setName] = useState('');
@@ -21,103 +22,38 @@ function Signup() {
       loginContext(data.token, data.user);
       navigate('/dashboard');
     } catch (err) {
-      const message = err.response?.data?.message || 'Signup failed. Please try again.';
-      setError(message);
+      setError(err.response?.data?.message || 'Signup failed. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h1 style={styles.title}>PrepIQ</h1>
-        <h2 style={styles.subtitle}>Create your account</h2>
-        {error && <div style={styles.error}>{error}</div>}
-        <form onSubmit={handleSubmit}>
-          <input
-            style={styles.input}
-            type="text"
-            placeholder="Full name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-          <input
-            style={styles.input}
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            style={styles.input}
-            type="password"
-            placeholder="Password (min 8 characters)"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            minLength={8}
-          />
-          <button style={styles.button} type="submit" disabled={loading}>
-            {loading ? 'Creating account...' : 'Sign Up'}
-          </button>
-        </form>
-        <p style={styles.linkText}>
-          Already have an account? <Link to="/login">Log in</Link>
-        </p>
+    <div className="page-flex">
+      <div className="auth-shell page-flex-body">
+        <div className="auth-card card">
+          <h1 className="auth-title">PrepIQ</h1>
+          <p className="auth-subtitle">Create your account</p>
+          {error && <div className="alert alert-error">{error}</div>}
+          <form onSubmit={handleSubmit}>
+            <label className="field-label">Full Name</label>
+            <input className="field-input" type="text" placeholder="Jane Doe" value={name} onChange={(e) => setName(e.target.value)} required />
+            <label className="field-label">Email</label>
+            <input className="field-input" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <label className="field-label">Password</label>
+            <input className="field-input" type="password" placeholder="At least 8 characters" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
+            <button className="btn btn-primary" type="submit" disabled={loading}>
+              {loading ? 'Creating account...' : 'Sign Up'}
+            </button>
+          </form>
+          <p className="auth-footer-link">
+            Already have an account? <Link to="/login">Log in</Link>
+          </p>
+        </div>
       </div>
+      <Footer />
     </div>
   );
 }
-
-const styles = {
-  container: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: '100vh',
-    fontFamily: 'sans-serif',
-    background: '#f5f5f5',
-  },
-  card: {
-    background: 'white',
-    padding: '2.5rem',
-    borderRadius: '8px',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-    width: '360px',
-  },
-  title: { textAlign: 'center', marginBottom: '0.25rem' },
-  subtitle: { textAlign: 'center', color: '#666', fontWeight: 'normal', marginBottom: '1.5rem' },
-  input: {
-    width: '100%',
-    padding: '0.75rem',
-    marginBottom: '1rem',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-    boxSizing: 'border-box',
-    fontSize: '1rem',
-  },
-  button: {
-    width: '100%',
-    padding: '0.75rem',
-    background: '#5B8DEF',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    fontSize: '1rem',
-    cursor: 'pointer',
-  },
-  error: {
-    background: '#fee',
-    color: '#c33',
-    padding: '0.75rem',
-    borderRadius: '4px',
-    marginBottom: '1rem',
-    fontSize: '0.9rem',
-  },
-  linkText: { textAlign: 'center', marginTop: '1rem', fontSize: '0.9rem' },
-};
 
 export default Signup;
