@@ -8,6 +8,8 @@
 
 **Day 5 update note:** Full JWT authentication is live — signup, login, password hashing (BCrypt), and route protection are working end-to-end (backend verified via PowerShell, frontend verified via browser signup/login/logout flow). `SecurityConfig.java` now enforces real rules (`/api/auth/**` and `/api/health` public, everything else requires a valid JWT) — the Day 3 permissive placeholder is gone. One extra file beyond the original plan: `config/PasswordEncoderConfig.java`, split out to avoid a circular bean dependency with `SecurityConfig`.
 
+
+**Day 6 update note:** MVP complete — Problem Logging CRUD, Weak-Topic Dashboard, and AI Mock Interview (Gemini-powered, with automatic model fallback for reliability) are all built and verified end-to-end, both locally and in production. Full UI overhaul applied (dark theme, Sora/Inter typography, shared Navbar/Footer components — `components/Navbar.jsx` was pulled forward from its original Day 9 slot for consistency). App is fully deployed: backend on Render (Docker), frontend on Netlify, database on Render Postgres. See `docs/DEPLOYMENT.md` for full deployment details and issues encountered. Known cosmetic issue (footer spacing/styling) deferred to Day 9 polish pass — not a functional blocker.
 ---
 
 ## 1. Repository Layout (Monorepo)
