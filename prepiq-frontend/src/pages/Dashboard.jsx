@@ -9,10 +9,12 @@ function Dashboard() {
   const { user } = useAuth();
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     getWeakTopics()
       .then(setTopics)
+      .catch(() => setError('Could not load your progress. Please refresh the page.'))
       .finally(() => setLoading(false));
   }, []);
 
@@ -37,15 +39,17 @@ function Dashboard() {
         <h1>Welcome back, {user?.name?.split(' ')[0]}</h1>
         <p className="link-muted" style={{ marginTop: '0.4rem' }}>{user?.email}</p>
 
+        {error && <div className="alert alert-error" style={{ marginTop: '1.5rem' }}>{error}</div>}
+
         {loading ? (
           <p className="link-muted" style={{ marginTop: '2rem' }}>Loading your progress...</p>
-        ) : topics.length === 0 ? (
+        ) : topics.length === 0 && !error ? (
           <div className="card" style={{ marginTop: '2rem' }}>
             <h3 style={{ marginBottom: '0.5rem' }}>No problems logged yet</h3>
             <p className="link-muted">Log a few problems and your weak-topic breakdown will appear here.</p>
             <Link to="/log-problem" style={{ display: 'inline-block', marginTop: '1rem' }}>Log a problem →</Link>
           </div>
-        ) : (
+        ) : topics.length > 0 ? (
           <>
             {weakTopics.length > 0 && (
               <div className="card" style={{ marginTop: '2rem', borderLeft: '3px solid #ff6b6b' }}>
@@ -73,7 +77,7 @@ function Dashboard() {
               ))}
             </div>
           </>
-        )}
+        ) : null}
       </div>
       <Footer />
     </div>
