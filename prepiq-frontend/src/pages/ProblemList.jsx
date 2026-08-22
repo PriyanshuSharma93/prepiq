@@ -8,13 +8,15 @@ function ProblemList() {
   const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [deletingId, setDeletingId] = useState(null);
 
   const loadProblems = async () => {
     setLoading(true);
+    setError('');
     try {
       setProblems(await getProblems());
     } catch (err) {
-      setError('Failed to load problems.');
+      setError('Failed to load problems. Please refresh the page.');
     } finally {
       setLoading(false);
     }
@@ -23,12 +25,15 @@ function ProblemList() {
   useEffect(() => { loadProblems(); }, []);
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Delete this problem?')) return;
+    if (!window.confirm('Delete this problem? This cannot be undone.')) return;
+    setDeletingId(id);
     try {
       await deleteProblem(id);
       setProblems(problems.filter((p) => p.id !== id));
     } catch (err) {
       setError('Failed to delete problem.');
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -48,12 +53,22 @@ function ProblemList() {
     <div className="page-flex">
       <Navbar />
       <div className="page-content-wide page-flex-body">
-        <h1>My Problems</h1>
-        {error && <div className="alert alert-error" style={{ marginTop: '1rem' }}>{error}</div>}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
+          <h1>My Problems</h1>
+          {problems.length > 0 && (
+            <span className="link-muted">{problems.length} logged</span>
+          )}
+        </div>
+        {error && <div className="alert alert-error" style={{ marginTop: '1rem' }} role="alert">{error}</div>}
         {loading ? (
-          <p className="link-muted" style={{ marginTop: '1.5rem' }}>Loading...</p>
+          <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="skeleton" style={{ height: '58px' }} />
+            ))}
+          </div>
         ) : problems.length === 0 ? (
           <div className="empty-state">
+            <div className="empty-state-icon">📝</div>
             <p>No problems logged yet.</p>
             <Link to="/log-problem">Log your first one →</Link>
           </div>
@@ -69,7 +84,13 @@ function ProblemList() {
                 </div>
                 <div className="problem-meta">
                   <span>{p.solvedDate}</span>
-                  <button className="btn-ghost" onClick={() => handleDelete(p.id)}>Delete</button>
+                  <button
+                    className="btn-ghost"
+                    onClick={() => handleDelete(p.id)}
+                    disabled={deletingId === p.id}
+                  >
+                    {deletingId === p.id ? 'Deleting...' : 'Delete'}
+                  </button>
                 </div>
               </div>
             ))}

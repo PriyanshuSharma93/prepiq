@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { signup } from '../api/authApi';
 import { useAuth } from '../context/AuthContext';
 import Footer from '../components/Footer';
+import Spinner from '../components/Spinner';
 
 function Signup() {
   const [name, setName] = useState('');
@@ -34,15 +35,16 @@ function Signup() {
         <div className="auth-card card">
           <h1 className="auth-title">PrepIQ</h1>
           <p className="auth-subtitle">Create your account</p>
-          {error && <div className="alert alert-error">{error}</div>}
+          {error && <div className="alert alert-error" role="alert">{error}</div>}
           <form onSubmit={handleSubmit}>
-            <label className="field-label">Full Name</label>
-            <input className="field-input" type="text" placeholder="Jane Doe" value={name} onChange={(e) => setName(e.target.value)} required />
-            <label className="field-label">Email</label>
-            <input className="field-input" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
-            <label className="field-label">Password</label>
-            <input className="field-input" type="password" placeholder="At least 8 characters" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
+            <label className="field-label" htmlFor="name">Full Name</label>
+            <input id="name" className="field-input" type="text" placeholder="Jane Doe" value={name} onChange={(e) => setName(e.target.value)} required autoFocus />
+            <label className="field-label" htmlFor="email">Email</label>
+            <input id="email" className="field-input" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <label className="field-label" htmlFor="password">Password</label>
+            <input id="password" className="field-input" type="password" placeholder="At least 8 characters" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
             <button className="btn btn-primary" type="submit" disabled={loading}>
+              {loading && <Spinner />}
               {loading ? 'Creating account...' : 'Sign Up'}
             </button>
           </form>

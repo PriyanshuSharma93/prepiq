@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { login } from '../api/authApi';
 import { useAuth } from '../context/AuthContext';
 import Footer from '../components/Footer';
+import Spinner from '../components/Spinner';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -33,13 +34,14 @@ function Login() {
         <div className="auth-card card">
           <h1 className="auth-title">PrepIQ</h1>
           <p className="auth-subtitle">Log in to your account</p>
-          {error && <div className="alert alert-error">{error}</div>}
+          {error && <div className="alert alert-error" role="alert">{error}</div>}
           <form onSubmit={handleSubmit}>
-            <label className="field-label">Email</label>
-            <input className="field-input" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
-            <label className="field-label">Password</label>
-            <input className="field-input" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required />
+            <label className="field-label" htmlFor="email">Email</label>
+            <input id="email" className="field-input" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required autoFocus />
+            <label className="field-label" htmlFor="password">Password</label>
+            <input id="password" className="field-input" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required />
             <button className="btn btn-primary" type="submit" disabled={loading}>
+              {loading && <Spinner />}
               {loading ? 'Logging in...' : 'Log In'}
             </button>
           </form>

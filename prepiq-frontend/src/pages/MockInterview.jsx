@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { startInterview, submitAnswer, endInterview } from '../api/interviewApi';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import Spinner from '../components/Spinner';
 
 function MockInterview() {
-  const [stage, setStage] = useState('idle'); // idle | loading | active | evaluating | finished
+  const [stage, setStage] = useState('idle');
   const [sessionId, setSessionId] = useState(null);
   const [question, setQuestion] = useState(null);
   const [answer, setAnswer] = useState('');
@@ -38,6 +39,7 @@ function MockInterview() {
       setAnswer('');
 
       if (data.sessionComplete) {
+        setStage('finishing');
         const finalResult = await endInterview(sessionId);
         setResult(finalResult);
         setStage('finished');
@@ -58,6 +60,7 @@ function MockInterview() {
     setAnswer('');
     setLastEvaluation('');
     setResult(null);
+    setError('');
   };
 
   return (
@@ -65,7 +68,8 @@ function MockInterview() {
       <Navbar />
       <div className="page-content page-flex-body">
         <h1>AI Mock Interview</h1>
-        {error && <div className="alert alert-error" style={{ marginTop: '1rem' }}>{error}</div>}
+        <p className="link-muted" style={{ marginTop: '0.4rem' }}>4 questions, targeted at your weak topics, with instant feedback.</p>
+        {error && <div className="alert alert-error" style={{ marginTop: '1rem' }} role="alert">{error}</div>}
 
         {stage === 'idle' && (
           <div className="card" style={{ marginTop: '1.5rem' }}>
@@ -73,22 +77,23 @@ function MockInterview() {
             <p className="link-muted" style={{ marginBottom: '1.5rem' }}>
               Questions will target your weak topics from the dashboard. You'll get 4 questions with instant AI feedback, plus a final score.
             </p>
-            <button className="btn btn-primary" style={{ width: 'auto', padding: '0.7rem 1.5rem' }} onClick={handleStart}>
+            <button className="btn btn-primary btn-auto" onClick={handleStart}>
               Start Interview
             </button>
           </div>
         )}
 
         {stage === 'loading' && (
-          <div className="card" style={{ marginTop: '1.5rem' }}>
-            <p className="link-muted">Preparing your first question...</p>
+          <div className="card" style={{ marginTop: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <Spinner />
+            <p className="link-muted" style={{ margin: 0 }}>Preparing your first question...</p>
           </div>
         )}
 
-        {(stage === 'active' || stage === 'evaluating') && question && (
+        {(stage === 'active' || stage === 'evaluating' || stage === 'finishing') && question && (
           <div className="card" style={{ marginTop: '1.5rem' }}>
             {lastEvaluation && (
-              <div className="alert alert-success" style={{ marginBottom: '1.2rem' }}>
+              <div className="alert alert-success" role="status">
                 <strong>Previous answer feedback:</strong> {lastEvaluation}
               </div>
             )}
@@ -103,11 +108,14 @@ function MockInterview() {
                 placeholder="Type your answer here..."
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
-                disabled={stage === 'evaluating'}
+                disabled={stage !== 'active'}
                 required
+                aria-label="Your answer"
               />
-              <button className="btn btn-primary" type="submit" disabled={stage === 'evaluating'}>
-                {stage === 'evaluating' ? 'Evaluating...' : 'Submit Answer'}
+              <button className="btn btn-primary" type="submit" disabled={stage !== 'active'}>
+                {stage === 'evaluating' && <Spinner />}
+                {stage === 'finishing' && <Spinner />}
+                {stage === 'evaluating' ? 'Evaluating...' : stage === 'finishing' ? 'Calculating final score...' : 'Submit Answer'}
               </button>
             </form>
           </div>
@@ -116,9 +124,11 @@ function MockInterview() {
         {stage === 'finished' && result && (
           <div className="card" style={{ marginTop: '1.5rem', textAlign: 'center' }}>
             <p className="link-muted" style={{ marginBottom: '0.3rem' }}>Session Complete</p>
-            <h2 style={{ fontSize: '2.5rem', margin: '0.5rem 0' }}>{result.score}/100</h2>
-            <p style={{ marginTop: '1rem', lineHeight: '1.5' }}>{result.feedbackSummary}</p>
-            <button className="btn btn-primary" style={{ width: 'auto', padding: '0.7rem 1.5rem', marginTop: '1.5rem' }} onClick={handleRestart}>
+            <h2 style={{ fontSize: '2.75rem', margin: '0.5rem 0', color: result.score >= 70 ? 'var(--accent-2)' : result.score >= 50 ? 'var(--warn)' : 'var(--danger)' }}>
+              {result.score}/100
+            </h2>
+            <p style={{ marginTop: '1rem', lineHeight: '1.6', maxWidth: '520px', margin: '1rem auto 0' }}>{result.feedbackSummary}</p>
+            <button className="btn btn-primary btn-auto" style={{ marginTop: '1.5rem' }} onClick={handleRestart}>
               Start Another Session
             </button>
           </div>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { getInterviewHistory } from '../api/interviewApi';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -20,12 +21,18 @@ function InterviewHistory() {
       <Navbar />
       <div className="page-content-wide page-flex-body">
         <h1>Interview History</h1>
-        {error && <div className="alert alert-error" style={{ marginTop: '1rem' }}>{error}</div>}
+        {error && <div className="alert alert-error" style={{ marginTop: '1rem' }} role="alert">{error}</div>}
         {loading ? (
-          <p className="link-muted" style={{ marginTop: '1.5rem' }}>Loading...</p>
+          <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
+            {[1, 2].map((i) => (
+              <div key={i} className="skeleton" style={{ height: '58px' }} />
+            ))}
+          </div>
         ) : sessions.length === 0 && !error ? (
           <div className="empty-state">
+            <div className="empty-state-icon">🎯</div>
             <p>No completed interviews yet.</p>
+            <Link to="/interview">Start your first mock interview →</Link>
           </div>
         ) : (
           <div style={{ marginTop: '1.5rem' }}>
@@ -36,7 +43,7 @@ function InterviewHistory() {
                   <span className="chip">{s.topicsCovered.join(', ')}</span>
                 </div>
                 <div className="problem-meta">
-                  <strong style={{ color: '#2ed9a0' }}>{s.score}/100</strong>
+                  <strong style={{ color: s.score >= 70 ? '#2ed9a0' : s.score >= 50 ? '#f2994a' : '#ff6b6b' }}>{s.score}/100</strong>
                 </div>
               </div>
             ))}

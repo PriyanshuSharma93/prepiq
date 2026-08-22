@@ -39,15 +39,19 @@ function Dashboard() {
         <h1>Welcome back, {user?.name?.split(' ')[0]}</h1>
         <p className="link-muted" style={{ marginTop: '0.4rem' }}>{user?.email}</p>
 
-        {error && <div className="alert alert-error" style={{ marginTop: '1.5rem' }}>{error}</div>}
+        {error && <div className="alert alert-error" style={{ marginTop: '1.5rem' }} role="alert">{error}</div>}
 
         {loading ? (
-          <p className="link-muted" style={{ marginTop: '2rem' }}>Loading your progress...</p>
+          <div style={{ marginTop: '2rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1rem' }}>
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="skeleton" style={{ height: '84px' }} />
+            ))}
+          </div>
         ) : topics.length === 0 && !error ? (
-          <div className="card" style={{ marginTop: '2rem' }}>
-            <h3 style={{ marginBottom: '0.5rem' }}>No problems logged yet</h3>
-            <p className="link-muted">Log a few problems and your weak-topic breakdown will appear here.</p>
-            <Link to="/log-problem" style={{ display: 'inline-block', marginTop: '1rem' }}>Log a problem →</Link>
+          <div className="empty-state">
+            <div className="empty-state-icon">📊</div>
+            <p>No problems logged yet. Your weak-topic breakdown will appear here.</p>
+            <Link to="/log-problem">Log a problem →</Link>
           </div>
         ) : topics.length > 0 ? (
           <>
@@ -65,7 +69,7 @@ function Dashboard() {
             <h3 style={{ marginTop: '2rem', marginBottom: '1rem' }}>Topic Breakdown</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1rem' }}>
               {topics.map((t) => (
-                <div key={t.topic} className="card" style={{ ...cardStyle(t.classification), padding: '1.2rem' }}>
+                <div key={t.topic} className="card card-hover" style={{ ...cardStyle(t.classification), padding: '1.2rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
                     <strong>{t.topic}</strong>
                     <span className={badgeClass(t.classification)}>{t.classification}</span>
