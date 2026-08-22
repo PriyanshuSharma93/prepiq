@@ -40,7 +40,7 @@ function InterviewHistory() {
               <div key={s.sessionId} className="problem-row" style={{ borderLeftColor: '#5b8def' }}>
                 <div className="problem-main">
                   <span className="problem-name">{new Date(s.startedAt).toLocaleDateString()}</span>
-                  <span className="chip">{s.topicsCovered.join(', ')}</span>
+                  <span className="chip">{s.topicsCovered && s.topicsCovered.length > 0 ? s.topicsCovered.join(', ') : 'General'}</span>
                 </div>
                 <div className="problem-meta">
                   <strong style={{ color: s.score >= 70 ? '#2ed9a0' : s.score >= 50 ? '#f2994a' : '#ff6b6b' }}>{s.score}/100</strong>

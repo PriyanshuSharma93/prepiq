@@ -8,6 +8,7 @@ import LogProblem from './pages/LogProblem';
 import ProblemList from './pages/ProblemList';
 import MockInterview from './pages/MockInterview';
 import InterviewHistory from './pages/InterviewHistory';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/problems" element={<ProtectedRoute><ProblemList /></ProtectedRoute>} />
           <Route path="/interview" element={<ProtectedRoute><MockInterview /></ProtectedRoute>} />
           <Route path="/history" element={<ProtectedRoute><InterviewHistory /></ProtectedRoute>} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

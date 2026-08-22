@@ -102,16 +102,21 @@ function MockInterview() {
             </span>
             <p style={{ fontSize: '1.05rem', lineHeight: '1.5', marginBottom: '1.2rem' }}>{question.questionText}</p>
             <form onSubmit={handleSubmit}>
-              <textarea
+                           <textarea
                 className="field-input"
                 style={{ minHeight: '120px' }}
                 placeholder="Type your answer here..."
                 value={answer}
-                onChange={(e) => setAnswer(e.target.value)}
+                onChange={(e) => setAnswer(e.target.value.slice(0, 3000))}
                 disabled={stage !== 'active'}
                 required
+                maxLength={3000}
                 aria-label="Your answer"
+                aria-describedby="answer-char-count"
               />
+              <p id="answer-char-count" className="link-muted" style={{ fontSize: '0.8rem', marginTop: '0.3rem', textAlign: 'right' }}>
+                {answer.length}/3000
+              </p>
               <button className="btn btn-primary" type="submit" disabled={stage !== 'active'}>
                 {stage === 'evaluating' && <Spinner />}
                 {stage === 'finishing' && <Spinner />}

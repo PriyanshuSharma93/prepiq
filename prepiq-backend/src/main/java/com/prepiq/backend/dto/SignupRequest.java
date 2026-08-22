@@ -19,4 +19,12 @@ public class SignupRequest {
     @NotBlank(message = "Password is required")
     @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
+
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim().toLowerCase();
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
 }
