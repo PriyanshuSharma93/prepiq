@@ -13,6 +13,8 @@
 ---
 **Day 7 update note:** Full UI/UX refinement pass completed — new design tokens (transitions, hover states, focus-visible accessibility outlines), responsive navbar with mobile hamburger menu, skeleton loading states, consistent empty states with icons, button spinners for all async actions (`components/Spinner.jsx` added). Footer restyled as a proper full-width bar (fixes Day 6's cosmetic issue). Backend: `exception/GlobalExceptionHandler.java` added — all API errors now return the consistent shape defined in API.md instead of Spring's default format. Redeployed to Render + Netlify, verified live.
 
+**Day 8 update note:** Full senior-level QA pass completed (bugs, security, performance, accessibility, production-readiness). 20 issues identified and triaged; highest-risk ones fixed: (1) **Netlify SPA routing** — added `public/_redirects` so direct URL navigation/refresh no longer 404s; (2) **critical bug caught in QA**: `InterviewHistory.jsx` had a leftover `stage` variable reference causing a blank-page crash — fixed and verified in production; (3) email normalization (trim + lowercase) on signup/login for consistent matching; (4) basic in-memory rate limiting (`RateLimitFilter`) on `/api/auth/**` — 20 req/min per IP; (5) JWT secret rotated from the example placeholder to a genuinely random value on Render; (6) 404 page added; (7) accessibility: `aria-live` region for async interview status, character counter with `maxLength` on answer textarea. Production build (`npm run build`) verified clean. All fixes verified both locally and on the live deployed app.
+
 ## 1. Repository Layout (Monorepo)
 
 prepiq/
