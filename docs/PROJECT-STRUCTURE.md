@@ -11,6 +11,7 @@
 
 **Day 6 update note:** MVP complete — Problem Logging CRUD, Weak-Topic Dashboard, and AI Mock Interview (Gemini-powered, with automatic model fallback for reliability) are all built and verified end-to-end, both locally and in production. Full UI overhaul applied (dark theme, Sora/Inter typography, shared Navbar/Footer components — `components/Navbar.jsx` was pulled forward from its original Day 9 slot for consistency). App is fully deployed: backend on Render (Docker), frontend on Netlify, database on Render Postgres. See `docs/DEPLOYMENT.md` for full deployment details and issues encountered. Known cosmetic issue (footer spacing/styling) deferred to Day 9 polish pass — not a functional blocker.
 ---
+**Day 7 update note:** Full UI/UX refinement pass completed — new design tokens (transitions, hover states, focus-visible accessibility outlines), responsive navbar with mobile hamburger menu, skeleton loading states, consistent empty states with icons, button spinners for all async actions (`components/Spinner.jsx` added). Footer restyled as a proper full-width bar (fixes Day 6's cosmetic issue). Backend: `exception/GlobalExceptionHandler.java` added — all API errors now return the consistent shape defined in API.md instead of Spring's default format. Redeployed to Render + Netlify, verified live.
 
 ## 1. Repository Layout (Monorepo)
 
