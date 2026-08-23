@@ -78,3 +78,31 @@ No `.env` file needed yet (Day 3 uses a hardcoded `http://localhost:8080/api` ba
 
 - PowerShell terminal in VS Code did not initially recognize `node`, `npm`, `psql`, or `git` even after installation — resolved each time by fully closing and reopening VS Code (fresh terminal session picks up updated PATH).
 - PostgreSQL on this machine runs on port **9090**, not the default 5432 — this was set during a previous install and is reflected throughout backend config.
+
+
+---
+
+## 8. Production Environment (Render + Netlify)
+
+### Backend (Render → `prepiq-backend` → Environment tab)
+
+| Variable | Purpose | Notes |
+|---|---|---|
+| `SPRING_PROFILES_ACTIVE` | Activates `application-prod.properties` | Value: `prod` |
+| `DATABASE_URL` | Production Postgres connection string | Format: `jdbc:postgresql://<render-host>/<db-name>` — must use Render's internal hostname, not localhost |
+| `DATABASE_USERNAME` | Production DB username | From Render Postgres Connections page |
+| `DATABASE_PASSWORD` | Production DB password | From Render Postgres Connections page |
+| `JWT_SECRET` | Production JWT signing key | Randomly generated, rotated Day 8 (no longer the placeholder example value) |
+| `GEMINI_API_KEY` | Same Gemini key as local dev | Free tier |
+| `CORS_ALLOWED_ORIGINS` | Comma-separated allowed frontend origins | `http://localhost:5173,https://dashing-bombolone-454555.netlify.app` |
+
+### Frontend (Netlify → Site configuration → Environment variables)
+
+| Variable | Purpose |
+|---|---|
+| `VITE_API_URL` | Points frontend to the live Render backend, e.g. `https://prepiq-backend-lktq.onrender.com/api` |
+
+### Security notes
+- No secrets are committed to the repository — verified via `git ls-files` audit (Day 9).
+- `application.properties.example` (safe template, no real values) is committed intentionally for onboarding.
+- JWT secret and rate limiting were hardened during the Day 8 QA pass — see `PROJECT-LOG.md`.
